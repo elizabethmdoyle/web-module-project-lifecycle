@@ -20,7 +20,7 @@ export default class App extends React.Component {
               } )
               .catch(err => {
                 err, `fetchAllTodos: error`
-              })
+              }) 
     }
 
   componentDidMount() {
