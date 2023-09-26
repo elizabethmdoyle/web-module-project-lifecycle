@@ -1,5 +1,5 @@
 import React from 'react'
-
+import Form from './Form'
 
 
 import axios from 'axios'
@@ -95,12 +95,8 @@ export default class App extends React.Component {
 
               //  return <div onClick={this.toggleCompleted(todo.id)} key={todo.id}>{todo.name}{todo.completed ? " ✔" : ''}</div>
             }
-          <form id="todoForm" onSubmit={this.onTodoFormSubmit}>
-            <input value={this.state.todoNameInput} onChange={this.handleChange} type="text" placeholder="Type todo" />
-            <input type="submit"></input>
-          </form>
-          <button onClick={this.toggleDisplayCompleteds}>{this.state.displayCompleteds ? 'Hide' : "Show"} Completed</button>
         </div>
+        <Form />
       </div>
     )
   }
