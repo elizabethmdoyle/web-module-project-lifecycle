@@ -1,6 +1,6 @@
 import React from 'react'
 import Form from './Form'
-
+import TodoList from './TodoList'
 
 import axios from 'axios'
 
@@ -81,22 +81,19 @@ export default class App extends React.Component {
     return (
       <div>
         <div id="error">Error: {this.state.error}</div>
-        <div id="todos">
-          <h2>Todos:</h2>
-           { this.state.todos.reduce(( acc, todo ) => {
-            
-              if(this.state.displayCompleteds || !todo.completed) {
-                return acc.concat(<div onClick={this.toggleCompleted(todo.id)} key={todo.id}>{todo.name}{todo.completed ? " ✔" : ''}</div>)
-              } return acc
-             
-           } , [])
-           
-
-
-              //  return <div onClick={this.toggleCompleted(todo.id)} key={todo.id}>{todo.name}{todo.completed ? " ✔" : ''}</div>
-            }
-        </div>
-        <Form />
+        <TodoList 
+        todos={this.state.todos}
+        displayCompleteds={this.state.displayCompleteds}
+        toggleCompleted={this.toggleCompleted}
+        
+        />
+        <Form 
+        onTodoFormSubmit={this.onTodoFormSubmit}
+        todoNameInput={this.state.todoNameInput}
+        handleChange={this.handleChange} 
+        toggleDisplayCompleteds={this.toggleDisplayCompleteds}
+        displayCompleted={this.state.displayCompleteds}
+        />
       </div>
     )
   }
