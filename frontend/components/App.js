@@ -47,12 +47,25 @@ export default class App extends React.Component {
   postNewTodo = () => { 
     axios.post(URL, { name: this.state.todoNameInput  }  )
           .then(res => {
-            this.fetchAllTodos()
+            this.setState({...this.state, todos: this.state.todos.concat(res.data.data)})
             this.resetForm()
           })
           .catch(this.setAxiosResponseError) 
 
 
+  }
+
+  toggleCompleted = id => (e) => {
+    axios.patch(`${URL}/${id}`)
+        .then(res => {
+          this.setState({...this.state, todos: this.state.todos.map(todo => {
+            if(todo.id !== id) {
+              return todo
+            }  return res.data.data
+          })
+          })
+        })
+        .catch(this.setAxiosResponseError) 
   }
 
   onTodoFormSubmit = (e) => {
@@ -67,7 +80,7 @@ export default class App extends React.Component {
         <div id="todos">
           <h2>Todos:</h2>
            { this.state.todos.map(todo => {
-                return <div key={todo.id}>{todo.name}</div>
+                return <div onClick={this.toggleCompleted(todo.id)} key={todo.id}>{todo.name}{todo.completed ? " ✔" : ''}</div>
             })}
           <form id="todoForm" onSubmit={this.onTodoFormSubmit}>
             <input value={this.state.todoNameInput} onChange={this.handleChange} type="text" placeholder="Type todo" />
