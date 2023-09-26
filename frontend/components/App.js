@@ -12,7 +12,7 @@ export default class App extends React.Component {
       todos: [],
       error: '',
       todoNameInput: '',
-
+      displayCompleteds: true
     }
 
   
@@ -55,7 +55,7 @@ export default class App extends React.Component {
 
   }
 
-  toggleCompleted = id => (e) => {
+  toggleCompleted = id => () => {
     axios.patch(`${URL}/${id}`)
         .then(res => {
           this.setState({...this.state, todos: this.state.todos.map(todo => {
@@ -66,6 +66,10 @@ export default class App extends React.Component {
           })
         })
         .catch(this.setAxiosResponseError) 
+  }
+
+  toggleDisplayCompleteds = () => {
+    this.setState({...this.state, displayCompleteds: !this.state.displayCompleteds})
   }
 
   onTodoFormSubmit = (e) => {
@@ -79,14 +83,23 @@ export default class App extends React.Component {
         <div id="error">Error: {this.state.error}</div>
         <div id="todos">
           <h2>Todos:</h2>
-           { this.state.todos.map(todo => {
-                return <div onClick={this.toggleCompleted(todo.id)} key={todo.id}>{todo.name}{todo.completed ? " ✔" : ''}</div>
-            })}
+           { this.state.todos.reduce(( acc, todo ) => {
+            
+              if(this.state.displayCompleteds || !todo.completed) {
+                return acc.concat(<div onClick={this.toggleCompleted(todo.id)} key={todo.id}>{todo.name}{todo.completed ? " ✔" : ''}</div>)
+              } return acc
+             
+           } , [])
+           
+
+
+              //  return <div onClick={this.toggleCompleted(todo.id)} key={todo.id}>{todo.name}{todo.completed ? " ✔" : ''}</div>
+            }
           <form id="todoForm" onSubmit={this.onTodoFormSubmit}>
             <input value={this.state.todoNameInput} onChange={this.handleChange} type="text" placeholder="Type todo" />
             <input type="submit"></input>
-            <button>Clear Completed</button>
           </form>
+          <button onClick={this.toggleDisplayCompleteds}>{this.state.displayCompleteds ? 'Hide' : "Show"} Completed</button>
         </div>
       </div>
     )
